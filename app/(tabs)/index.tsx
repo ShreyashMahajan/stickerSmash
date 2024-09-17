@@ -1,14 +1,39 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet, View, FlatList} from "react-native";
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import {router} from "expo-router";
+import {Text} from "react-native-paper";
+import {Image} from "expo-image";
 
-export default function TabOneScreen() {
+import {stocks} from "@/data";
+import {StockCard} from "@/components/stockCard";
+
+export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+    <View style={{flex: 1, paddingTop: 30}}>
+      <Text
+        variant="titleLarge"
+        style={{
+          fontWeight: "bold",
+          marginLeft: 5,
+          marginBottom: 5,
+        }}
+      >
+        Available Stocks
+      </Text>
+      <FlatList
+        keyExtractor={(item) => item.ticker}
+        data={stocks}
+        renderItem={({item}) => (
+          <StockCard
+            companyName={item.companyName}
+            ticker={item.ticker}
+            image={item.image}
+            price={item.price}
+            priceChange={item.priceChange}
+            priceChangePercentage={item.priceChangePercentage}
+          />
+        )}
+      />
     </View>
   );
 }
@@ -16,16 +41,16 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   separator: {
     marginVertical: 30,
     height: 1,
-    width: '80%',
+    width: "80%",
   },
 });

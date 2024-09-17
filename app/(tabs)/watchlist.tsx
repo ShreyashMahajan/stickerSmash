@@ -1,0 +1,91 @@
+import {StockCard} from "@/components/stockCard";
+import {StoreContext} from "@/Context/storeContext";
+import {stocks} from "@/data";
+import {useContext} from "react";
+import {FlatList, StyleSheet, View, Animated, Pressable} from "react-native";
+import {Text} from "react-native-paper";
+import Swipeable from "react-native-gesture-handler/Swipeable";
+
+function RightActions({
+  progress,
+  dragX,
+  onPress,
+}: {
+  progress: Animated.AnimatedInterpolation<string | number>;
+  dragX: Animated.AnimatedInterpolation<string | number>;
+  onPress: () => void;
+}) {
+  const scale = dragX.interpolate({
+    inputRange: [-100, 0],
+    outputRange: [0.7, 0],
+  });
+  return (
+    <Pressable
+      style={{
+        backgroundColor: "red",
+        justifyContent: "center",
+        alignItems: "center",
+        width: 90,
+      }}
+      onPress={onPress}
+    >
+      <Animated.Text
+        style={{
+          fontWeight: "bold",
+          fontSize: 22,
+          color: "white",
+          transform: [{scale}],
+        }}
+      >
+        Delete
+      </Animated.Text>
+    </Pressable>
+  );
+}
+export default function WatchlistScreen() {
+  const {likedStocks, updateLikedStocks} = useContext(StoreContext);
+
+  if (likedStocks.length > 0)
+    return (
+      <FlatList
+        keyExtractor={(item) => item.ticker}
+        data={stocks.filter((item) => likedStocks.includes(item.ticker))}
+        renderItem={({item}) => (
+          <Swipeable
+            renderRightActions={(progress, dragX) => (
+              <RightActions
+                progress={progress}
+                dragX={dragX}
+                onPress={() => updateLikedStocks(item.ticker, "del")}
+              />
+            )}
+          >
+            <StockCard {...item} />
+          </Swipeable>
+        )}
+      />
+    );
+
+  return (
+    <View style={styles.container}>
+      <Text> No Stocks On Watchlist</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  separator: {
+    marginVertical: 30,
+    height: 1,
+    width: "80%",
+  },
+});
