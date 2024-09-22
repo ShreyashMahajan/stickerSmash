@@ -5,7 +5,6 @@ import {Text} from "react-native-paper";
 
 export default function SearchScreen() {
   const {searchQuery, searchedStocks} = useStore();
-  console.log("🚀 ~ SarchScreen ~ searchQuery:", searchQuery, searchedStocks);
 
   if (!searchQuery && searchedStocks.length === 0) {
     return (

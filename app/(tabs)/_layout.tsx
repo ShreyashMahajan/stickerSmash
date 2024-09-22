@@ -1,12 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {Link, router, Tabs} from "expo-router";
-import {Pressable} from "react-native";
+import {Pressable, View} from "react-native";
 
 import Colors from "@/constants/Colors";
 import {useColorScheme} from "@/components/useColorScheme";
 import {useClientOnlyValue} from "@/components/useClientOnlyValue";
 import {TextInput} from "react-native-paper";
+import {BottomNavigation, Text} from "react-native-paper";
+import HomeScreen from ".";
+import WatchlistScreen from "./watchlist";
+import {NewsPage} from "./newsPage";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -16,50 +20,72 @@ function TabBarIcon(props: {
   return <MaterialIcons size={28} style={{marginBottom: -3}} {...props} />;
 }
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
+const HomeRoute = () => <HomeScreen />;
+const WatchListRoute = () => <WatchlistScreen />;
+const NewsRoute = () => <NewsPage />;
+const VoiceSearch = () => (
+  <View
+    style={{
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <Text
+      style={{
+        color: "white",
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({color}) => <TabBarIcon name="home" color={color} />,
-          header: () => (
-            <Pressable
-              style={{width: "100%", paddingHorizontal: 20, paddingTop: 50}}
-              onPress={() => router.push("/search")}
-            >
-              <TextInput
-                placeholder="Search Stock..."
-                disabled
-                mode="outlined"
-                left={
-                  <TextInput.Icon
-                    icon={"magnify"}
-                    onPressIn={() => router.push("/search")}
-                  />
-                }
-              />
-            </Pressable>
-          ),
-        }}
+      Search By Voice (coming soon...)
+    </Text>
+  </View>
+);
+
+export default function TabLayout() {
+  const colorScheme = useColorScheme();
+  const [index, setIndex] = useState<number>(0);
+  const [routes, setRoutes] = useState([
+    {
+      key: "home",
+      title: "Home",
+      focusedIcon: "home",
+      unfocusedIcon: "home-outline",
+    },
+    {
+      key: "watchlist",
+      title: "Watchlist",
+      focusedIcon: "briefcase",
+      unfocusedIcon: "briefcase-outline",
+    },
+    {
+      key: "news",
+      title: "News",
+      focusedIcon: "briefcase",
+      unfocusedIcon: "briefcase-outline",
+    },
+    {
+      key: "voice",
+      title: "Voice",
+      focusedIcon: "briefcase",
+      unfocusedIcon: "briefcase-outline",
+    },
+  ]);
+
+  const renderScene = BottomNavigation.SceneMap({
+    home: HomeRoute,
+    watchlist: WatchListRoute,
+    news: NewsRoute,
+    voice: VoiceSearch,
+  });
+
+  return (
+    <>
+      <BottomNavigation
+        navigationState={{index, routes}}
+        onIndexChange={setIndex}
+        renderScene={renderScene}
+        getLazy={({route}) => route.lazy}
       />
-      <Tabs.Screen
-        name="watchlist"
-        options={{
-          title: "Watch List",
-          tabBarIcon: ({color}) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    </Tabs>
+    </>
   );
 }

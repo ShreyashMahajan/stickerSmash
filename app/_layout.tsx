@@ -57,7 +57,7 @@ function RootLayoutNav() {
 
   useEffect(() => {
     async function getLikedStocks() {
-      const stocks = await AsyncStorage.getItem("watchlust");
+      const stocks = await AsyncStorage.getItem("watchlist");
       if (stocks) setLikedStocks(JSON.parse(stocks));
     }
 
@@ -83,7 +83,6 @@ function RootLayoutNav() {
     setSearchQuery(text);
 
     const stocks = searchStocks(text);
-    console.log("🚀 ~ RootLayoutNav ~ stocks:", stocks);
     setSearchedStocks([...stocks]);
   };
 

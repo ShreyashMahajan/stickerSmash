@@ -2,7 +2,14 @@ import {StockCard} from "@/components/stockCard";
 import {StoreContext} from "@/Context/storeContext";
 import {stocks} from "@/data";
 import {useContext} from "react";
-import {FlatList, StyleSheet, View, Animated, Pressable} from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  Animated,
+  Pressable,
+  SafeAreaView,
+} from "react-native";
 import {Text} from "react-native-paper";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
@@ -47,29 +54,33 @@ export default function WatchlistScreen() {
 
   if (likedStocks.length > 0)
     return (
-      <FlatList
-        keyExtractor={(item) => item.ticker}
-        data={stocks.filter((item) => likedStocks.includes(item.ticker))}
-        renderItem={({item}) => (
-          <Swipeable
-            renderRightActions={(progress, dragX) => (
-              <RightActions
-                progress={progress}
-                dragX={dragX}
-                onPress={() => updateLikedStocks(item.ticker, "del")}
-              />
-            )}
-          >
-            <StockCard {...item} />
-          </Swipeable>
-        )}
-      />
+      <SafeAreaView>
+        <FlatList
+          keyExtractor={(item) => item.ticker}
+          data={stocks.filter((item) => likedStocks.includes(item.ticker))}
+          renderItem={({item}) => (
+            <Swipeable
+              renderRightActions={(progress, dragX) => (
+                <RightActions
+                  progress={progress}
+                  dragX={dragX}
+                  onPress={() => updateLikedStocks(item.ticker, "del")}
+                />
+              )}
+            >
+              <StockCard {...item} />
+            </Swipeable>
+          )}
+        />
+      </SafeAreaView>
     );
 
   return (
-    <View style={styles.container}>
-      <Text> No Stocks On Watchlist</Text>
-    </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <Text> No Stocks On Watchlist</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 

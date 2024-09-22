@@ -1,7 +1,7 @@
-import {StyleSheet, View, FlatList} from "react-native";
+import {StyleSheet, View, FlatList, Pressable} from "react-native";
 
 import {router} from "expo-router";
-import {Text} from "react-native-paper";
+import {Text, TextInput} from "react-native-paper";
 import {Image} from "expo-image";
 
 import {stocks} from "@/data";
@@ -10,6 +10,27 @@ import {StockCard} from "@/components/stockCard";
 export default function HomeScreen() {
   return (
     <View style={{flex: 1, paddingTop: 30}}>
+      <Pressable
+        style={{
+          width: "100%",
+          paddingHorizontal: 20,
+          paddingTop: 50,
+          marginBottom: 20,
+        }}
+        onPress={() => router.push("/search")}
+      >
+        <TextInput
+          placeholder="Search Stock..."
+          disabled
+          mode="outlined"
+          left={
+            <TextInput.Icon
+              icon={"magnify"}
+              onPressIn={() => router.push("/search")}
+            />
+          }
+        />
+      </Pressable>
       <Text
         variant="titleLarge"
         style={{
